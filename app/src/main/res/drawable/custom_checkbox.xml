@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Состояние для выбранного чекбокса -->
+    <item android:drawable="@drawable/checked_square" android:state_checked="true"/>
+    <!-- Состояние для невыбранного чекбокса -->
+    <item android:drawable="@drawable/empty_square" android:state_checked="false"/>
+</selector>

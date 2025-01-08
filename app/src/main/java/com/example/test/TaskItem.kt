@@ -1,7 +1,8 @@
 package com.example.test
 
-data class MedicineItem(
+data class TaskItem(
+    val id: String,
     val time: String,
-    val medicineName: String,
+    val taskName: String,
     val checked: Boolean
 )

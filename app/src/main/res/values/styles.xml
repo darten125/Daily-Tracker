@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomDialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:layout_width">340dp</item> <!-- Заполняет всю ширину -->
+        <item name="android:layout_height">340dp</item> <!-- Высота зависит от контента -->
+    </style>
+
+</resources>

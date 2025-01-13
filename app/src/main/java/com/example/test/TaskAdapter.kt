@@ -2,13 +2,18 @@ package com.example.test
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test.databinding.ListItemBinding
 
-class TaskAdapter(private var itemList: List<TaskItem>) :
-    RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
+class TaskAdapter(
+    private var itemList: List<TaskItem>,
+    private val onTaskCheckedChanged: (TaskItem,Boolean)-> Unit,
+    private val onTaskEdit:(TaskItem) -> Unit,
+    private val onTaskDelete:(TaskItem) -> Unit
+) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     // ViewHolder для одного элемента списка
     class TaskViewHolder(val binding: ListItemBinding) :
@@ -27,6 +32,30 @@ class TaskAdapter(private var itemList: List<TaskItem>) :
         holder.binding.clockTime.text = item.time
         holder.binding.medicineName.text = item.taskName
         holder.binding.itemCheckbox.isChecked = item.checked
+
+        holder.binding.itemCheckbox.setOnCheckedChangeListener{ _,isChecked ->
+            onTaskCheckedChanged(item, isChecked)
+        }
+
+        holder.binding.taskOptions.setOnClickListener { view ->
+            val popupMenu = PopupMenu(view.context, holder.binding.taskOptions)
+            popupMenu.inflate(R.menu.options_menu)
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.action_edit -> {
+                        onTaskEdit(item) // Вызываем callback для редактирования
+                        true
+                    }
+                    R.id.action_delete -> {
+                        onTaskDelete(item) // Вызываем callback для удаления
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popupMenu.show()
+        }
     }
 
     override fun getItemCount(): Int {
@@ -37,6 +66,10 @@ class TaskAdapter(private var itemList: List<TaskItem>) :
     fun updateTasks(newTasks: List<TaskItem>) {
         itemList = newTasks
         notifyDataSetChanged() // Обновляем RecyclerView
+    }
+
+    fun getItemList(): List<TaskItem>{
+        return itemList
     }
 }
 

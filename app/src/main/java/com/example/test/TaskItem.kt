@@ -2,7 +2,7 @@ package com.example.test
 
 data class TaskItem(
     val id: String,
-    val time: String,
-    val taskName: String,
-    val checked: Boolean
+    var time: String,
+    var taskName: String,
+    var checked: Boolean
 )

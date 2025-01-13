@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="lightGreen">#9FEA48</color>
     <color name="green">#4CAF50</color>
+    <color name="approveAction">#008477</color>
 </resources>

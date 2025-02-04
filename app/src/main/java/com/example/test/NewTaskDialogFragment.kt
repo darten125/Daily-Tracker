@@ -68,7 +68,7 @@ class NewTaskDialogFragment(
 
         binding.createButton.setOnClickListener {
             val taskName = binding.newTaskNameInput.text.toString()
-            val taskTime = binding.newTaskTimeInput.text.toString()
+            //val taskTime = binding.newTaskTimeInput.text.toString()
             if(taskName.isBlank() || selectedTime.isNullOrBlank()){
                 Toast.makeText(context,"Feel all data!", Toast.LENGTH_SHORT).show()
             }

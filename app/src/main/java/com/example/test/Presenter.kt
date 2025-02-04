@@ -1,7 +1,11 @@
 package com.example.test
 
+import android.content.Context
+import android.util.Log
+
 class TaskPresenter(
     private val view: GeneralContract.View,
+    private val context: Context,
     private val taskManager: TaskManager,
 ) : GeneralContract.Presenter {
     override fun loadTasks() {
@@ -25,9 +29,11 @@ class TaskPresenter(
         try {
             val task = TaskItem(taskManager.generateTaskId(),time,taskName,false)
             taskManager.addTask(task)
+            taskManager.setAlarmForTask(context, task) // Устанавливаем будильник
             val tasks = taskManager.loadAllTasks()
             view.showTasks(tasks)
         } catch (e:Exception){
+            Log.e("TaskPresenter", "Ошибка при добавлении задачи", e)
             view.showError("Failed to add new task")
         }
     }

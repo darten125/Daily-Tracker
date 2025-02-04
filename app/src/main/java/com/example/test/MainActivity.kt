@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), GeneralContract.View {
         setContentView(binding.root)
 
         // Инициализация Presenter
-        presenter = TaskPresenter(this, TaskManager(this))
+        presenter = TaskPresenter(this,this, TaskManager(this))
         adapter = TaskAdapter(
             mutableListOf(),
             onTaskCheckedChanged = { task, isChecked ->
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), GeneralContract.View {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
-        //presenter.clear()
+        presenter.clear()
         presenter.loadTasks()
 
         binding.addButton.setOnClickListener {

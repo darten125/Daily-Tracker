@@ -1,6 +1,10 @@
 package com.example.test
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import java.util.Calendar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -85,7 +89,7 @@ class TaskManager(context: Context) {
     // Загрузка всех задач
     fun loadAllTasks(): List<TaskItem> {
         val taskIds = loadTaskIds()
-        return taskIds.mapNotNull { loadTask(it) }
+        return (taskIds.mapNotNull { loadTask(it) }).sortedBy { it.time }
     }
 
     // Сохранение всех задач
@@ -111,4 +115,33 @@ class TaskManager(context: Context) {
             ?.toSet() ?: emptySet()
     }
 
+    fun setAlarmForTask(context: Context, task: TaskItem) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            putExtra("taskName", task.taskName)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            task.id.toInt(),
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val timeParts = task.time.split(":").map { it.toInt() }
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, timeParts[0])
+            set(Calendar.MINUTE, timeParts[1])
+            set(Calendar.SECOND, 0)
+        }
+
+        if (calendar.timeInMillis < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1) // Если время уже прошло, ставим на следующий день
+        }
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            pendingIntent
+        )
+    }
 }
